@@ -1,10 +1,14 @@
+package heheheha;
+
 import java.util.*;
 
-public class Main {
+public class ShuntingYard
+{
 
     // Operator precedence map
     private static final Map<String, Integer> PRECEDENCE = new HashMap<>();
-    static {
+    static
+    {
         PRECEDENCE.put("+", 1);
         PRECEDENCE.put("-", 1);
         PRECEDENCE.put("*", 2);
@@ -12,9 +16,10 @@ public class Main {
         PRECEDENCE.put("^", 3);  // exponent
     }
 
-    public static void main(String[] args) {
-        // Add as many examples as you want here
-        String[] tests = {
+    public static void main(String[] args)
+    {
+        String[] examples =
+        	{
             "(3 + 4) * 2 / (1 - 5)",
             "2 ^ 3 ^ 2",
             "(5 * (6 + 2))",
@@ -25,16 +30,15 @@ public class Main {
             "100 / (5 * 2)",
             "3 - 10 / 2",
             "(7 + 3) * (4 + 2 ^ 3) - 5",
-            
-            // Invalid example for demonstration:
-            "7 + )3 * 4("
+            "7 + )3 * 4(" // invalid
         };
 
-        // Loop through and evaluate each expression
-        for (String expr : tests) {
+        for (String expr : examples)
+        {
             System.out.println("Input: " + expr);
 
-            try {
+            try
+            {
                 validateExpression(expr);
 
                 String postfix = infixToPostfix(expr);
@@ -43,7 +47,9 @@ public class Main {
                 double result = evaluatePostfix(postfix);
                 System.out.println("Result: " + result);
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 System.out.println("Invalid expression: " + e.getMessage());
             }
 
@@ -51,11 +57,13 @@ public class Main {
         }
     }
 
-    public static void validateExpression(String expr) throws Exception {
+    public static void validateExpression(String expr) throws Exception
+    {
         Stack<Character> stack = new Stack<>();
         char prev = ' ';
 
-        for (char c : expr.toCharArray()) {
+        for (char c : expr.toCharArray())
+        {
             if (c == ' ') continue;
 
             // Check parentheses
@@ -66,8 +74,10 @@ public class Main {
             }
 
             // Check consecutive operators
-            if ("+-*/^".indexOf(c) != -1) {
-                if ("+-*/^".indexOf(prev) != -1 && prev != ' ') {
+            if ("+-*/^".indexOf(c) != -1)
+            {
+                if ("+-*/^".indexOf(prev) != -1 && prev != ' ')
+                {
                     throw new Exception("Two operators in a row");
                 }
             }
@@ -78,36 +88,41 @@ public class Main {
         if (!stack.isEmpty()) throw new Exception("Unbalanced parentheses");
     }
 
-    public static String infixToPostfix(String expr) throws Exception {
+    public static String infixToPostfix(String expr) throws Exception
+    {
         Stack<String> ops = new Stack<>();
         StringBuilder output = new StringBuilder();
 
         List<String> tokens = tokenize(expr);
 
-        for (String token : tokens) {
-            if (isNumber(token)) {
+        for (String token : tokens)
+        {
+            if (isNumber(token))
+            {
                 output.append(token).append(" ");
             }
-            else if (isOperator(token)) {
+            else if (isOperator(token))
+            {
                 while (!ops.isEmpty() &&
                         isOperator(ops.peek()) &&
                         (
-                            // left-associative operators
-                            !token.equals("^") && PRECEDENCE.get(token) <= PRECEDENCE.get(ops.peek())
-                            ||
-                            // right-associative exponent
-                            token.equals("^") && PRECEDENCE.get(token) < PRECEDENCE.get(ops.peek())
+                            (!token.equals("^") && PRECEDENCE.get(token) <= PRECEDENCE.get(ops.peek())) ||
+                            (token.equals("^") && PRECEDENCE.get(token) < PRECEDENCE.get(ops.peek()))
                         )
-                ) {
+                )
+                {
                     output.append(ops.pop()).append(" ");
                 }
                 ops.push(token);
             }
-            else if (token.equals("(")) {
+            else if (token.equals("("))
+            {
                 ops.push(token);
             }
-            else if (token.equals(")")) {
-                while (!ops.isEmpty() && !ops.peek().equals("(")) {
+            else if (token.equals(")"))
+            {
+                while (!ops.isEmpty() && !ops.peek().equals("("))
+                {
                     output.append(ops.pop()).append(" ");
                 }
                 if (ops.isEmpty()) throw new Exception("Mismatched parentheses");
@@ -115,7 +130,8 @@ public class Main {
             }
         }
 
-        while (!ops.isEmpty()) {
+        while (!ops.isEmpty())
+        {
             if (ops.peek().equals("(")) throw new Exception("Mismatched parentheses");
             output.append(ops.pop()).append(" ");
         }
@@ -123,37 +139,18 @@ public class Main {
         return output.toString().trim();
     }
 
-    // Tokenizer breaks expression into numbers and operators
-    private static List<String> tokenize(String expr) {
-        List<String> tokens = new ArrayList<>();
-        StringBuilder number = new StringBuilder();
-
-        for (char c : expr.toCharArray()) {
-            if (Character.isDigit(c) || c == '.') {
-                number.append(c);
-            }
-            else {
-                if (number.length() > 0) {
-                    tokens.add(number.toString());
-                    number.setLength(0);
-                }
-                if (c == ' ') continue;
-                tokens.add(String.valueOf(c));
-            }
-        }
-
-        if (number.length() > 0) tokens.add(number.toString());
-        return tokens;
-    }
-
-    public static double evaluatePostfix(String postfix) throws Exception {
+    public static double evaluatePostfix(String postfix) throws Exception
+    {
         Stack<Double> stack = new Stack<>();
 
-        for (String token : postfix.split(" ")) {
-            if (isNumber(token)) {
+        for (String token : postfix.split(" "))
+        {
+            if (isNumber(token))
+            {
                 stack.push(Double.parseDouble(token));
             }
-            else if (isOperator(token)) {
+            else if (isOperator(token))
+            {
                 if (stack.size() < 2) throw new Exception("Insufficient operands");
 
                 double b = stack.pop();
@@ -173,12 +170,40 @@ public class Main {
         return stack.pop();
     }
 
-    // Helpers
-    private static boolean isNumber(String token) {
+    private static boolean isNumber(String token)
+    {
         return token.matches("\\d+(\\.\\d+)?");
     }
 
-    private static boolean isOperator(String token) {
+    private static boolean isOperator(String token)
+    {
         return PRECEDENCE.containsKey(token);
+    }
+
+    private static List<String> tokenize(String expr)
+    {
+        List<String> tokens = new ArrayList<>();
+        StringBuilder number = new StringBuilder();
+
+        for (char c : expr.toCharArray())
+        {
+            if (Character.isDigit(c) || c == '.')
+            {
+                number.append(c);
+            }
+            else
+            {
+                if (number.length() > 0)
+                {
+                    tokens.add(number.toString());
+                    number.setLength(0);
+                }
+                if (c == ' ') continue;
+                tokens.add(String.valueOf(c));
+            }
+        }
+
+        if (number.length() > 0) tokens.add(number.toString());
+        return tokens;
     }
 }
