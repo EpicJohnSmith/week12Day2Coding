@@ -5,7 +5,7 @@ import java.util.*;
 public class ShuntingYard
 {
 
-    // Operator precedence map
+    // Operator precedence map                 // what in the world is Precedence?
     private static final Map<String, Integer> PRECEDENCE = new HashMap<>();
     static
     {
@@ -33,7 +33,7 @@ public class ShuntingYard
             "7 + )3 * 4(" // invalid
         };
 
-        for (String expr : examples)
+        for (String expr : examples)   // Needed some help at this part
         {
             System.out.println("Input: " + expr);
 
@@ -62,7 +62,7 @@ public class ShuntingYard
         Stack<Character> stack = new Stack<>();
         char prev = ' ';
 
-        for (char c : expr.toCharArray())
+        for (char c : expr.toCharArray()) // Had to look up documentation to start this
         {
             if (c == ' ') continue;
 
@@ -90,7 +90,7 @@ public class ShuntingYard
 
     public static String infixToPostfix(String expr) throws Exception
     {
-        Stack<String> ops = new Stack<>();
+        Stack<String> ops = new Stack<>(); // This was confusing to understand.
         StringBuilder output = new StringBuilder();
 
         List<String> tokens = tokenize(expr);
@@ -139,7 +139,7 @@ public class ShuntingYard
         return output.toString().trim();
     }
 
-    public static double evaluatePostfix(String postfix) throws Exception
+    public static double evaluatePostfix(String postfix) throws Exception // This is to show how the expressions are stored, I think
     {
         Stack<Double> stack = new Stack<>();
 
@@ -180,7 +180,7 @@ public class ShuntingYard
         return PRECEDENCE.containsKey(token);
     }
 
-    private static List<String> tokenize(String expr)
+    private static List<String> tokenize(String expr) // Needed some help on this with AI
     {
         List<String> tokens = new ArrayList<>();
         StringBuilder number = new StringBuilder();
